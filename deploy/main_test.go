@@ -229,6 +229,7 @@ func TestDeploy(t *testing.T) {
 		inputs: inputs{
 			printBuildLogs:  true,
 			printDeployLogs: true,
+			waitForLiveURL:   true,
 		},
 		expectedLogs: []byte(`app "foo" does not exist yet, creating...
 wait for deployment to finish
