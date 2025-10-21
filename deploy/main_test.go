@@ -279,6 +279,9 @@ _GitHubActionsFileCommandDelimeter_
 			}, nil).Once()
 			return rt
 		}(),
+		inputs: inputs{
+			waitForLiveUrl: true,
+		},
 		expectedLogs: []byte(`app "foo" already exists, updating...
 wait for deployment to finish
 deployment is in phase: ACTIVE
@@ -432,7 +435,6 @@ deployment is in phase: ACTIVE
 			as.On("GetLogs", ctx, appID, deploymentID, "", godo.AppLogTypeDeploy, true, -1).Return(&godo.AppLogs{
 				HistoricURLs: []string{"http://deploy.com"},
 			}, &godo.Response{Response: &http.Response{StatusCode: http.StatusBadRequest}}, errors.New("an error"))
-			as.On("Get", ctx, appID).Return(&godo.App{ID: appID, LiveURL: "https://example.com"}, &godo.Response{}, nil)
 			return as
 		}(),
 		expectedLogs: []byte(`app "foo" does not exist yet, creating...
@@ -460,6 +462,9 @@ deployment is in phase: ACTIVE
 			as.On("Get", ctx, appID).Return(&godo.App{ID: appID, LiveURL: "https://example.com"}, &godo.Response{}, errors.New("an error"))
 			return as
 		}(),
+		inputs: inputs{
+			waitForLiveUrl: true,
+		},
 		err: true,
 		expectedLogs: []byte(`app "foo" does not exist yet, creating...
 wait for deployment to finish
